@@ -1,0 +1,21 @@
+.search {
+    position: fixed;
+    margin-left: 25px;
+    margin-top: 25px;
+    width: 250px;
+  }
+  
+  .search-panel {
+    width: 250px;
+  }
+  
+  .search-panel__company {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .search-panel__price {
+    
+  }

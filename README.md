@@ -1,4 +1,4 @@
-## Тестовое задание для Gridnine Systems
+## task for Gridnine Systems
 
 ### Условие:
 

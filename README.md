@@ -11,8 +11,9 @@
 
 ![Layout](https://raw.githubusercontent.com/maximKaschitskiy/gridnine-test/main/brief/avia_search_results_.png)
 
-### Решение:
+### Solution:
 
-Приложение на React.
+React application.
 
-Для запуска используйте `npm run start`
+How to run:
+    npm run start

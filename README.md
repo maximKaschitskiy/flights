@@ -15,5 +15,5 @@
 
 React application.
 
-How to run:
+How to run:  
     npm run start

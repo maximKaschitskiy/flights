@@ -8,134 +8,119 @@ function SearchPanel({
   handleFlyTimeSort,
   handleTransfer,
   filter,
-  filterChange,
   handleFilter,
   handleSelectAvia,
+  filterInit
 }) {
   return (
     <section className="search">
       <form className="search-panel">
         <div className="search-panel__sort">
-          <p className="search-panel__title title">Сортировать</p>
+          <p className="search-panel__title title">Sort by</p>
           <div>
-            <label>
-              <input
+            <input
                 type="radio"
                 name="radio"
                 id="low-price"
                 onClick={hadleLowSort}
                 value={"low-price"}
               />
-              - по возрастанию цены
+            <label htmlFor="low-price">
+              price decrending
             </label>
           </div>
           <div>
-            <label>
-              <input
+            <input
                 type="radio"
                 name="radio"
                 id="hight-price"
                 onClick={handleHighSort}
                 value={"low-price"}
               />
-              - по убыванию цены
+            <label htmlFor="hight-price">
+              price ascending
             </label>
           </div>
           <div>
-            <label>
-              <input
+            <input
                 type="radio"
                 name="radio"
                 id="by-time"
                 onClick={handleFlyTimeSort}
                 value={"low-price"}
               />
-              - по времени в пути
+            <label htmlFor="by-time">
+              travel time
             </label>
           </div>
         </div>
         <div className="search-panel__filter">
-          <p className="search-panel__title title">Фильтровать</p>
+          <p className="search-panel__title title">Filter by</p>
           <div>
-            <label>
               <input
-                type="checkbox"
-                id="transfer"
-                name="transfer"
-                value="transfer"
-                checked={filter.oneTransfer}
-                onChange={(event) =>
-                  handleTransfer("oneTransfer", event.target.checked)
-                }
+                type="number"
+                id="transfers"
+                name="transfers"
+                value={typeof filter.transfers === 'number' ? filter.transfers : 0}
+                onChange={(event) => {
+                  handleTransfer("transfers", Number(event.target.value));
+                }}
+                min="0"
+                max={typeof filterInit.transfers === 'number' ? filterInit.transfers : 0}
               ></input>
-              - с пересадкой
-            </label>
-          </div>
-          <div>
-            <label>
-              <input
-                type="checkbox"
-                id="no-transfer"
-                name="no-transfer"
-                value="no-transfer"
-                checked={filter.withoutTransfer}
-                onChange={(event) =>
-                  handleTransfer("withoutTransfer", event.target.checked)
-                }
-              ></input>
-              - без пересадок
-            </label>
+            <label htmlFor="transfers">transfers</label>
           </div>
         </div>
         <div className="search-panel__price">
-          <p className="search-panel__title title">Цена</p>
+          <p className="search-panel__title title">Price</p>
           <div>
-            <label>
-              От
-              <input
+            <label htmlFor="price-form">From</label>
+            <input
                 type="number"
                 id="price-form"
                 name="price-form"
-                min="0"
                 onChange={(event) => {
-                  handleFilter("priceFrom", event.target.value);
-                  filterChange(filter);
+                  handleFilter("priceFrom", Number(event.target.value));
                 }}
                 value={filter.priceFrom}
+                min={typeof filterInit.priceFrom === 'number' ? filterInit.priceFrom : 0}
+                max={typeof filterInit.priceTo === 'number' ? filterInit.priceTo : 0}
               ></input>
-            </label>
           </div>
           <div>
-            <label>
-              До
-              <input
+            <label htmlFor="price-to">To</label>
+            <input
                 type="number"
                 id="price-to"
                 name="price-to"
-                min="0"
                 onChange={(event) => {
-                  handleFilter("priceTo", event.target.value);
-                  filterChange(filter);
+                  handleFilter("priceTo", Number(event.target.value));
                 }}
                 value={filter.priceTo}
+                min={typeof filterInit.priceFrom === 'number' ? filterInit.priceFrom : 0}
+                max={typeof filterInit.priceTo === 'number' ? filterInit.priceTo : 0}
               ></input>
-            </label>
           </div>
         </div>
         <ul className="search-panel__company">
-          <p className="search-panel__title">Авиакомпании</p>
+          <p className="search-panel__title">Airlines</p>
           {companies.length !== 0 &&
             companies.map((item, index) => {
               return (
                 <li className="" key={shortid.generate()}>
-                  <label className="search-panel__comp-name">
                     <input
                       type="checkbox"
                       id={index}
                       name={item}
                       checked={filter.aviaList.includes(item)}
-                      onChange={() => handleSelectAvia(item)}
+                      onChange={() => {
+                        handleSelectAvia(item);
+                      }}
                     ></input>
+                  <label
+                    className="search-panel__comp-name"
+                    htmlFor={index}
+                  >
                     {item}
                   </label>
                 </li>

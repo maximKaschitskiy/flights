@@ -1,9 +1,11 @@
 import shortid from "shortid";
 import Moment from "react-moment";
+import moment from "moment";
 import "moment/locale/ru";
 import "./SearchResult.css";
 
-function SearchPanel({filteredFlights, counter, maxLength, plusCounter }) {
+function SearchPanel({ filteredFlights, counter, maxLength, plusCounter }) {
+
   return (
     <section className="search-result">
       {filteredFlights.length ? (
@@ -21,10 +23,10 @@ function SearchPanel({filteredFlights, counter, maxLength, plusCounter }) {
                       <div className="result__price-section">
                         <h4 className="result__price">
                           {allFlights.flight.price.total.amount}
-                          <span>{allFlights.flight.price.total.currency}</span>
+                          <span>&#160;{allFlights.flight.price.total.currency}</span>
                         </h4>
                         <p className="result__price-caption">
-                          Стоимость для одного взрослого пассажира
+                          Price for one adult passenger
                         </p>
                       </div>
                     </div>
@@ -34,61 +36,66 @@ function SearchPanel({filteredFlights, counter, maxLength, plusCounter }) {
                           <div key={shortid.generate()}>
                             {legs &&
                               legs.segments.map((segments, segmentsIndex) => {
-                                const travelDurationHours = (
-                                  segments.travelDuration / 60
-                                ).toFixed(0);
-
-                                const travelDurationMinutes =
-                                  segments.travelDuration % 60;
-
-                                const showTravelDurationHours =
-                                  travelDurationHours === 0
-                                    ? null
-                                    : travelDurationHours + " " + "ч";
-
-                                const showTravelDurationMinutes =
-                                  travelDurationMinutes === 0
-                                    ? null
-                                    : travelDurationMinutes + " " + "мин";
-
-                                const transfer = segments.starting ? (
-                                  <div className="result__transfer">
-                                    <p className="result__transfer-count">
-                                      1 пересадка
-                                    </p>
-                                  </div>
-                                ) : null;
+                                const segDuration = moment.duration(segments.travelDuration, "minutes").format("h:mm");
+                                
+                                const transfer =
+                                  legs.segments.length > 1
+                                  && legs.segments.length - 1 > segmentsIndex
+                                  ? (
+                                    <div className="result__transfer">
+                                      <p className="result__transfer-count">
+                                        transfer
+                                      </p>
+                                    </div>
+                                  ) : null;
 
                                 const devide =
-                                  allFlights.flight.legs.length - 1 ===
-                                    legsIndex &&
-                                  legs.segments.length - 1 ===
-                                    segmentsIndex ? null : (
+                                  0 < segmentsIndex &&
+                                  legs.segments.length - 1 === segmentsIndex &&
+                                  allFlights.flight.legs.length - 1 !==
+                                    legsIndex ? (
                                     <div className="result__digits-block-divide"></div>
-                                  );
+                                  ) : null;
+
                                 return (
                                   <div key={shortid.generate()}>
                                     <div className="result__places">
                                       <div className="result__places-content">
                                         <p className="result__airport">
-                                          {segments.departureCity.caption}
+                                          {segments.departureCity
+                                            ? segments.departureCity.caption
+                                            : ""}
                                           ,&#160;
-                                          {segments.departureAirport.caption}
+                                          {segments.departureAirport
+                                            ? segments.departureAirport.caption
+                                            : ""}
                                           &#160;
                                           <span className="result__reduction">
-                                            ({segments.departureAirport.uid})
+                                            (
+                                            {segments.departureAirport
+                                              ? segments.departureAirport.uid
+                                              : ""}
+                                            )
                                           </span>
                                         </p>
                                         <p className="result__arrow">
                                           &#10145;
                                         </p>
                                         <p className="result__airport">
-                                          {segments.arrivalCity.caption}
+                                          {segments.arrivalCity
+                                            ? segments.arrivalCity.caption
+                                            : ""}
                                           ,&#160;
-                                          {segments.arrivalAirport.caption}
+                                          {segments.arrivalAirport
+                                            ? segments.arrivalAirport.caption
+                                            : ""}
                                           &#160;
                                           <span className="result__reduction">
-                                            ({segments.arrivalAirport.uid})
+                                            (
+                                            {segments.arrivalAirport
+                                              ? segments.arrivalAirport.uid
+                                              : ""}
+                                            )
                                           </span>
                                         </p>
                                       </div>
@@ -99,14 +106,14 @@ function SearchPanel({filteredFlights, counter, maxLength, plusCounter }) {
                                           <p className="result__timing-time">
                                             <Moment
                                               date={segments.departureDate}
-                                              locale="ru"
+                                              locale="en"
                                               format="H:mm"
                                             />
                                           </p>
                                           <p className="result__timing-date">
                                             <Moment
                                               date={segments.departureDate}
-                                              locale="ru"
+                                              locale="en"
                                               format="DD MMM ddd"
                                             />
                                           </p>
@@ -116,33 +123,38 @@ function SearchPanel({filteredFlights, counter, maxLength, plusCounter }) {
                                             <span className="result__timing-total-timer">
                                               &#128337;
                                             </span>
-                                            {showTravelDurationHours}
                                             &#160;
-                                            {showTravelDurationMinutes}
+                                            <Moment
+                                              parse="HH:mm"
+                                              locale="en"
+                                              format="H:mm"
+                                            >
+                                              {segDuration}
+                                            </Moment>
                                           </p>
                                         </div>
                                         <div className="result__timing result__timing_end">
                                           <p className="result__timing-time">
                                             <Moment
                                               date={segments.arrivalDate}
-                                              locale="ru"
+                                              locale="en"
                                               format="H:mm"
                                             />
                                           </p>
                                           <p className="result__timing-date">
                                             <Moment
                                               date={segments.arrivalDate}
-                                              locale="ru"
+                                              locale="en"
                                               format="DD MMM ddd"
                                             />
                                           </p>
                                         </div>
                                       </div>
-                                      {transfer}
                                       <p className="result__doer">
-                                        Рейс выполняет:&#160;
+                                        Airline:&#160;
                                         {segments.airline.caption}
                                       </p>
+                                      {transfer}
                                       {devide}
                                     </div>
                                   </div>
@@ -151,19 +163,26 @@ function SearchPanel({filteredFlights, counter, maxLength, plusCounter }) {
                           </div>
                         );
                       })}
-                    <button className="result__select-button">Выбрать</button>
+                    <button className="result__select-button">Buy</button>
                   </li>
                 );
               })}
-          {maxLength <= counter ? null : (
-            <button className="result__loadmore-button" onClick={plusCounter}>
-              Показать ещё
-            </button>
+          {filteredFlights.length <= counter
+            ? null
+            : (
+              <button
+                className="result__loadmore-button"
+                onClick={() => {
+                  plusCounter();
+                }}
+              >
+                Show more
+              </button>
           )}
         </ul>
       ) : (
         <div className="search-result__no-tickets">
-          <p className="search-result__no-tickets-sign">Нет результатов</p>
+          <p className="search-result__no-tickets-sign">No results</p>
         </div>
       )}
     </section>

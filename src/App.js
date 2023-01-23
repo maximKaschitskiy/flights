@@ -17,13 +17,27 @@ function App() {
   const [counter, setCounter] = React.useState(2);
   const maxLength = flights.length;
 
+  const [filterInit, setFilterInit] = React.useState({
+    priceFrom: 0,
+    priceTo: 0,
+    transfers: 0,
+  })
+
   const [filter, setFilter] = React.useState({
-    priceFrom: "",
-    priceTo: "",
+    priceFrom: 0,
+    priceTo: 0,
     aviaList: [],
-    oneTransfer: false,
-    withoutTranfer: false,
+    transfers: 0,
   });
+
+  React.useEffect(() => {
+    const filterObj = { ...filter, ...filterInit}
+    setFilter(filterObj);
+  }, [filterInit]);
+
+  React.useEffect(() => {
+    filterChange(filter);
+  }, [filter]);
 
   React.useEffect(() => {
     document.title = "Tickets Database";
@@ -48,6 +62,21 @@ function App() {
     setCompanies(aviaCompanyList);
   }, [flights]);
 
+  React.useEffect(() => {
+    const allTranfers = flights.flatMap(flight => 
+      flight.flight.legs.map(leg => leg.segments.length)
+    );
+    const allPrices = flights.map(flight => 
+      flight.flight.price.total.amount
+    );
+    const filterObj = { ...filter,
+      priceFrom: Math.min.apply(Math, allPrices),
+      priceTo: Math.max.apply(Math, allPrices),
+      transfers: Math.max.apply(Math, allTranfers) -1
+    };
+    setFilterInit(filterObj);
+  }, [flights]);
+
   const plusCounter = () => {
     const newCounter = Math.min(maxLength, counter + 2);
     setCounter(newCounter);
@@ -61,7 +90,6 @@ function App() {
   const handleTransfer = (key, value) => {
     const filterObj = { ...filter, [key]: value };
     setFilter(filterObj);
-    filterChange(filterObj);
   };
 
   const handleSelectAvia = (name) => {
@@ -73,38 +101,26 @@ function App() {
     }
     const filterObj = { ...filter, aviaList: filterAviaList };
     setFilter(filterObj);
-    filterChange(filterObj);
   };
 
   const filterChange = (filter) => {
     let newArr = flights;
     if (filter.priceFrom !== "") {
-      newArr = newArr.filter(
-        (item) => +item.flight.price.total.amount > +filter.priceFrom
-      );
+      newArr = newArr.filter(item => +item.flight.price.total.amount > +filter.priceFrom);
     }
     if (filter.priceTo !== "") {
-      newArr = newArr.filter(
-        (item) => +item.flight.price.total.amount < +filter.priceTo
-      );
+      newArr = newArr.filter(item => +item.flight.price.total.amount < +filter.priceTo);
     }
     if (filter.aviaList.length !== 0) {
-      newArr = newArr.filter((item) =>
+      newArr = newArr.filter(item =>
         filter.aviaList.includes(item.flight.carrier.caption)
       );
     }
-    if (filter.oneTransfer) {
-      newArr = newArr.filter((item) =>
-        item.flight.legs.some((item) =>
-          item.segments.some((segment) => segment.starting)
-        )
-      );
-    }
-    if (filter.withoutTransfer) {
-      newArr = newArr.filter((item) =>
-        item.flight.legs.every((item) =>
-          item.segments.every((segment) => segment.starting === false)
-        )
+    if (filter.transfers !== false || filter.transfers !== "undefined" || filter.transfers !== '') {
+      newArr = newArr.filter(item =>
+          item.flight.legs.every(leg =>
+            leg.segments.length === filter.transfers + 1
+          )
       );
     }
     setFilteredFlights(newArr);
@@ -145,9 +161,9 @@ function App() {
           handleFlyTimeSort={handleFlyTimeSort}
           handleTransfer={handleTransfer}
           filter={filter}
-          filterChange={filterChange}
           handleFilter={handleFilter}
           handleSelectAvia={handleSelectAvia}
+          filterInit={filterInit}
         />
         <SearchResult
           filteredFlights={filteredFlights}

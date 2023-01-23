@@ -1,4 +1,4 @@
-.result__label {
+  .result__label {
     display: flex;
     justify-content: space-between;
     background-color: rgb(0, 135, 201);
@@ -141,18 +141,15 @@
   .search-result__list {
     list-style: none;
     padding: 0;
+    margin: 0;
   }
   
   .search-result {
     width: 100%;
+    height: max-content;
     margin-left: 300px;
   }
-  
-  input {
-    margin-left: 5px;
-    margin-right: 5px;
-  }
-  
+    
   .search-result__no-tickets {
     width: 100%;
     background-color: rgb(240, 84, 99);

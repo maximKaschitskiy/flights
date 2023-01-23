@@ -11,6 +11,7 @@
     align-items: flex-end;
     margin-right: 15px;
     align-self: center;
+    width: 50%;
   }
   
   .result__price {
@@ -29,7 +30,7 @@
     margin-top: 0;
     margin-bottom: 0;
     margin-left: 15px;
-    width: 35%;
+    width: 50%;
   }
   
   .result__places {
@@ -137,6 +138,12 @@
     border: 0;
     color: white;
   }
+
+  .search-result {
+    width: 100%;
+    height: max-content;
+    margin-left: 25px;
+  }
   
   .search-result__list {
     list-style: none;
@@ -144,12 +151,6 @@
     margin: 0;
   }
   
-  .search-result {
-    width: 100%;
-    height: max-content;
-    margin-left: 300px;
-  }
-    
   .search-result__no-tickets {
     width: 100%;
     background-color: rgb(240, 84, 99);

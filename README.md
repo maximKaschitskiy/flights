@@ -14,7 +14,6 @@ Framework: React
 
 Libraries: moment and react-moment for time, shortid for IDs.
 
-How to run:  
 ### How to run:  
 
     npm i

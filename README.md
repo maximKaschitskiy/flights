@@ -10,8 +10,8 @@ Frontend-application display list of aviation flights, based on mock-file. There
 
 ### Technologies:
 
-React application.
 Framework: React
+
 Libraries: moment and react-moment for time, shortid for IDs.
 
 How to run:  

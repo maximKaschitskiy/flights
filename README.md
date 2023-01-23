@@ -2,6 +2,8 @@
 
 ### Release:
 
+https://maximkaschitskiy.github.io/flights/
+
 ### Description:
 
 Frontend-application display list of aviation flights, from JSON mock-file. There are filter and sorting controls allow. List of results have lazy load.
